@@ -1,4 +1,6 @@
-exports.homepage = async (req, res) => {
+const catchAsync = require("../utils/catchAsync")
+
+exports.homepage = catchAsync (async (req, res, next) => {
   const locals = [
     {
       id: 1,
@@ -19,4 +21,4 @@ exports.homepage = async (req, res) => {
       locals,
     },
   });
-};
+});
