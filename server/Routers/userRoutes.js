@@ -15,6 +15,12 @@ router
   .get(noteController.getAllNotes)
   .post(noteController.creatNotes);
 
+router
+  .route("/notes/:id")
+  .get(noteController.getOneNote)
+  .delete(noteController.deleteOne)
+  .put(noteController.updateOne);
+
 router.get("/logout", authController.logout);
 
 module.exports = router;
