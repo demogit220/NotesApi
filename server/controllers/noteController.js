@@ -35,17 +35,14 @@ exports.getAllNotes = catchAsync(async (req, res, next) => {
 });
 
 exports.getOneNote = catchAsync(async (req, res, next) => {
-  // console.log(req.param.id);
-
-  const note = await Note.findById(req.params.id);
+  const note = await Note.findOne({
+    _id: req.params.id,
+    owner: req.user._id,
+  });
 
   if (!note) {
-    // ankit not working
     return next(Error("No document found with this id"));
   }
-  // console.log(typeof note.owner)
-  if (!req.user._id.equals(note.owner))
-    return next(Error("No document found with this id"));
 
   res.status(200).json({
     status: "success",
@@ -56,15 +53,16 @@ exports.getOneNote = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteOne = catchAsync(async (req, res, next) => {
-  const note = await Note.findById(req.params.id);
+  const deleted = await User.findOneAndUpdate(req.user._id, {
+    $pull: { notes: req.params.id },
+  });
 
-  /* #TODO: deleting the null reference from the users notes array */
-  if (!req.user._id.equals(note.owner))
-    return next(Error("No document found by id"));
+  const note = await Note.findOneAndDelete({
+    _id: req.params.id,
+    owner: req.user._id,
+  });
 
-  const doc = await Note.findByIdAndDelete(req.params.id);
-
-  if (!doc) return next(Error("No document found by id!"));
+  if (!note) return next(Error("No document found by id!"));
 
   res.status(200).json({
     status: "success",
@@ -73,13 +71,12 @@ exports.deleteOne = catchAsync(async (req, res, next) => {
 });
 
 exports.updateOne = catchAsync(async (req, res, next) => {
-  const note = await Note.findById(req.params.id); // ankit
-  if (!req.user._id.equals(note.owner))
-    return next(Error("No document found by id"));
-
   const { title, data } = req.body;
-  const doc = await Note.findByIdAndUpdate(
-    req.params.id,
+  const note = await Note.findOneAndUpdate(
+    {
+      _id: req.params.id,
+      owner: req.user._id,
+    },
     {
       title,
       data,
@@ -91,24 +88,24 @@ exports.updateOne = catchAsync(async (req, res, next) => {
     }
   );
 
-  if (!doc) {
+  if (!note) {
     return next(Error("No document found by id!"));
   }
 
   res.status(200).json({
     status: "success",
     data: {
-      data: doc,
+      data: note,
     },
   });
 });
 
-// not working properly
+
 exports.shareNote = catchAsync(async (req, res, next) => {
   const userId = req.body.userId;
   const noteId = req.params.id;
 
-  const note = await Note.findById(noteId); // ankit
+  const note = await Note.findById(noteId); 
   const user = await User.findById(userId);
 
   if (!note || !user) return next(Error("User or note not found!"));
@@ -136,20 +133,20 @@ exports.shareNote = catchAsync(async (req, res, next) => {
   });
 });
 
-
-exports.search = catchAsync(async(req, res, next) => {
+exports.search = catchAsync(async (req, res, next) => {
   const query = req.query.q;
-    // Perform a text search on the "title" and "content" fields
-    const notes = await Note.find({
-      $text: { $search: query, $caseSensitive: true},
-      owner: req.user._id 
-    });
-   
-    res.status(200).json({
-      status: "success",
-      results: notes.length,
-      data: {
-        notes
-      }
-    })
-})
+  // Perform a text search on the "title" and "content" fields
+  // Indexer removes all the stop words, like this, is etc
+  const notes = await Note.find({
+    $text: { $search: query, $caseSensitive: true },
+    owner: req.user._id,
+  });
+
+  res.status(200).json({
+    status: "success",
+    results: notes.length,
+    data: {
+      notes,
+    },
+  });
+});
