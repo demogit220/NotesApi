@@ -23,6 +23,8 @@ router
 
 router.post("/notes/:id/share", noteController.shareNote)
 
+router.get("/search", noteController.search)
+
 router.get("/logout", authController.logout);
 
 module.exports = router;

@@ -135,3 +135,21 @@ exports.shareNote = catchAsync(async (req, res, next) => {
     },
   });
 });
+
+
+exports.search = catchAsync(async(req, res, next) => {
+  const query = req.query.q;
+    // Perform a text search on the "title" and "content" fields
+    const notes = await Note.find({
+      $text: { $search: query, $caseSensitive: true},
+      owner: req.user._id 
+    });
+   
+    res.status(200).json({
+      status: "success",
+      results: notes.length,
+      data: {
+        notes
+      }
+    })
+})
