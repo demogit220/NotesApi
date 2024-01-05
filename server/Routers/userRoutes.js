@@ -21,6 +21,8 @@ router
   .delete(noteController.deleteOne)
   .put(noteController.updateOne);
 
+router.post("/notes/:id/share", noteController.shareNote)
+
 router.get("/logout", authController.logout);
 
 module.exports = router;
