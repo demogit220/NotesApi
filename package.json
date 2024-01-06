@@ -2,12 +2,12 @@
   "name": "notesapi",
   "version": "1.0.0",
   "description": "speer assignment backend",
-  "main": "app.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "nodemon server/server.js",
     "dev": "nodemon server/server.js",
-    "lint": "eslint --fix server",
-    "test": "jest"
+    "lint": "eslint --fix server test",
+    "test": "jest --watchAll --verbose"
   },
   "author": "gaurav",
   "license": "ISC",
@@ -26,16 +26,20 @@
     "mongoose": "^8.0.3",
     "morgan": "^1.10.0",
     "nodemon": "^3.0.2",
+    "supertest": "^6.3.3",
     "validator": "^13.11.0",
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.11",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest": "^27.6.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^5.1.2",
-    "jest": "^29.7.0"
+    "jest": "^29.7.0",
+    "ts-node": "^10.9.2"
   }
 }

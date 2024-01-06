@@ -1,8 +1,9 @@
 const express = require("express");
 
-const router = express.Router();
 const noteController = require("../controllers/noteController");
 const authController = require("../controllers/authController");
+
+const router = express.Router();
 /*
  * App routes
  */

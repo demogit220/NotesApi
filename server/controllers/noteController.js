@@ -25,6 +25,10 @@ exports.creatNotes = catchAsync(async (req, res, next) => {
 exports.getAllNotes = catchAsync(async (req, res, next) => {
   const notes = await User.findById(req.user._id).populate("notes");
 
+  if (!notes) {
+    return next(Error("No document found with this id"));
+  }
+
   res.status(201).json({
     status: "success",
     results: notes.notes.length,
