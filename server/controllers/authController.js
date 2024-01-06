@@ -1,19 +1,18 @@
-const User = require("../../models/userModel");
 const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
 const catchAsync = require("../utils/catchAsync");
 // const promisify = require('promisify')
 
-const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
-};
 
 const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
   const cookieOptions = {
     expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
     ),
     // secure: true, // only alows to send cookies on https
     httpOnly: true, // cookie can not be accesed and modified in any way by the browser, preventing cross-site scripting attacks
@@ -81,9 +80,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   // 3. Check if user still exists
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
-    return next(
-      Error("The user belonging to this token does not exist!")
-    );
+    return next(Error("The user belonging to this token does not exist!"));
   }
 
   // 4. Check if user changed password after the token was issued

@@ -1,11 +1,12 @@
 /* eslint-disable quotes */
 module.exports = {
+  root: true,
   env: {
     browser: true,
     commonjs: true,
     es2021: true,
   },
-  extends: ["airbnb", "prettier", "plugin:node/recommended"],
+  extends: ["airbnb-base", "prettier", "plugin:node/recommended"],
   overrides: [
     {
       env: {
@@ -23,6 +24,10 @@ module.exports = {
   },
   rules: {
     "prettier/prettier": "error",
+    'no-underscore-dangle': 0,
+    'no-param-reassign': 0,
+    'no-return-assign': 0,
+    camelcase: 0,
     endOfLine: 0,
     "spaced-comment": "off",
     "no-console": "warn",
@@ -30,9 +35,7 @@ module.exports = {
     "func-names": "off",
     "object-shorthand": "off",
     "no-process-exit": "off",
-    "no-param-reassign": "off",
     "no-return-await": "off",
-    "no-underscore-dangle": "off",
     "class-methods-use-this": "off",
     "prefer-destructuring": ["error", { object: true, array: false }],
     "no-unused-vars": ["error", { argsIgnorePattern: "req|res|next|val" }],

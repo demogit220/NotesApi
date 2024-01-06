@@ -1,6 +1,6 @@
 const catchAsync = require("../utils/catchAsync");
-const Note = require("../../models/notesModel");
-const User = require("../../models/userModel");
+const Note = require("../models/notesModel");
+const User = require("../models/userModel");
 
 exports.creatNotes = catchAsync(async (req, res, next) => {
   const { title, data } = req.body;
@@ -53,7 +53,7 @@ exports.getOneNote = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteOne = catchAsync(async (req, res, next) => {
-  const deleted = await User.findOneAndUpdate(req.user._id, {
+  await User.findOneAndUpdate(req.user._id, {
     $pull: { notes: req.params.id },
   });
 
@@ -85,7 +85,7 @@ exports.updateOne = catchAsync(async (req, res, next) => {
     {
       new: true, // for showing the current update rather than previous body
       runValidators: true,
-    }
+    },
   );
 
   if (!note) {
@@ -100,12 +100,11 @@ exports.updateOne = catchAsync(async (req, res, next) => {
   });
 });
 
-
 exports.shareNote = catchAsync(async (req, res, next) => {
-  const userId = req.body.userId;
+  const { userId } = req.body;
   const noteId = req.params.id;
 
-  const note = await Note.findById(noteId); 
+  const note = await Note.findById(noteId);
   const user = await User.findById(userId);
 
   if (!note || !user) return next(Error("User or note not found!"));
