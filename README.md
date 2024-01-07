@@ -15,13 +15,13 @@ This API provides a secure and scalable way to manage notes, including creating,
 
 ## Running Locally commanda:
 1. Clone the repository: 
->  `git clone https://github.com/demogit220/notesApi`
+ * `git clone https://github.com/demogit220/notesApi`
 
 2. Move to the project folder: 
-> `cd notesApi`
+*  `cd notesApi`
 
 3. Install all the packages:
-> `npm install`
+*  `npm install`
 
 4. Setup the config file with name *.env* and paste the below code in *.env* file and enter your own `JWT_SECRET` , `DATABASE_PASSWORD`, `DATABASE` URI link which you get from mongoDB atlas.  
 ```
@@ -36,13 +36,13 @@ JWT_COOKIE_EXPIRES_IN=90
 ```
 
 5. Start the project: 
-> `npm start`
+* `npm start`
 
 6. For Linting of code: 
-> `npm lint`
+* `npm lint`
 
 7. To run the tests:
-> `npm test`
+* `npm test`
 ## Endpoints
 
 ### Authentication
