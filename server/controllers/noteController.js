@@ -10,9 +10,11 @@ exports.creatNotes = catchAsync(async (req, res, next) => {
     owner: req.user._id,
   });
 
-  const user = await User.findById(req.user._id);
-  user.notes.push(newNote._id);
-  await user.save();
+  await User.findByIdAndUpdate(
+    req.user._id,
+    { $push: { notes: newNote._id } },
+    { new: true } // Return the updated document
+  );
 
   res.status(201).json({
     status: "success",
@@ -57,21 +59,22 @@ exports.getOneNote = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteOne = catchAsync(async (req, res, next) => {
-  await User.findOneAndUpdate(req.user._id, {
-    $pull: { notes: req.params.id },
-  });
-
+  // The code first deletes the note and then updates the user's notes array.
+  // This ensures the note is deleted even if the user update fails.
   const note = await Note.findOneAndDelete({
     _id: req.params.id,
     owner: req.user._id,
   });
 
-  if (!note) return next(Error("No document found by id!"));
+  if (!note) {
+    return next(Error("No document found with this id"));
+  }
 
-  res.status(200).json({
-    status: "success",
-    data: null,
+  await User.findByIdAndUpdate(req.user._id, {
+    $pull: { notes: note._id },
   });
+
+  res.status(204).json({ status: "Note deleted successfully" });
 });
 
 exports.updateOne = catchAsync(async (req, res, next) => {
@@ -89,7 +92,7 @@ exports.updateOne = catchAsync(async (req, res, next) => {
     {
       new: true, // for showing the current update rather than previous body
       runValidators: true,
-    },
+    }
   );
 
   if (!note) {
@@ -125,8 +128,11 @@ exports.shareNote = catchAsync(async (req, res, next) => {
     owner: userId,
   });
 
-  user.notes.push(newNote._id);
-  await user.save();
+  await User.findByIdAndUpdate(
+    userId,
+    { $push: { notes: newNote._id } },
+    { new: true } // Return the updated document
+  );
 
   res.status(200).json({
     status: "success",
@@ -141,7 +147,7 @@ exports.search = catchAsync(async (req, res, next) => {
   // Perform a text search on the "title" and "content" fields
   // Indexer removes all the stop words, like this, is etc
   const notes = await Note.find({
-    $text: { $search: query, $caseSensitive: true },
+    $text: { $search: query},
     owner: req.user._id,
   });
 

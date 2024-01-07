@@ -22,6 +22,7 @@ const createSendToken = (user, statusCode, res) => {
   res.cookie("jwt", token, cookieOptions);
 
   user.password = undefined;
+  user.passwordConfirm = undefined;
   res.status(statusCode).json({
     status: "success",
     token,
@@ -36,9 +37,9 @@ exports.signup = catchAsync(async (req, res, next) => {
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
-    // passwordConfirm: req.body.passwordConfirm,
+    passwordConfirm: req.body.passwordConfirm,
   });
-  //   console.log(newUser);
+  
   createSendToken(newUser, 201, res);
 });
 
@@ -94,14 +95,13 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
+  // In order to keep local variables for use in template rendering between requests, 
+  // instead use app.locals
   res.locals.user = currentUser;
   next();
 });
 
 exports.logout = (req, res) => {
-  res.cookie("jwt", "loggedout", {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
+  res.clearCookie("jwt");
   res.status(200).json({ status: "success" });
 };

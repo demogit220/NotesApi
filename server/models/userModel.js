@@ -21,31 +21,34 @@ const userSchema = new mongoose.Schema({
     minLength: 8,
     select: false,
   },
+  passwordConfirm: {
+    type: String,
+    required: [true, 'Please confirm your password'],
+    validate: {
+      // This only works on Save or create!!!
+      validator: function (el) {
+        return el === this.password;
+      },
+      message: 'Passwords are not the same',
+    },
+  },
   notes: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Note",
     },
   ],
-  //   passwordConfirm: {
-  //     type: String,
-  //     required: [true, 'Please confirm your password'],
-  //     validate: {
-  //       // This only works on Save or create!!!
-  //       validator: function (el) {
-  //         return el === this.password;
-  //       },
-  //       message: 'Passwords are not the same',
-  //     },
-  //   },
 });
 
 userSchema.pre("save", async function (next) {
+  // Only run this function if password was moddified (not on other update functions)
+  // not going to work in findOneAndUpdate
   if (!this.isModified("password")) return next();
+
   this.password = await bcrypt.hash(this.password, 11);
 
   // Delete passwordConfirm field
-  // this.passwordConfirm = undefined;
+  this.passwordConfirm = undefined;
   next();
 });
 
