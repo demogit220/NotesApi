@@ -7,7 +7,7 @@
     "start": "nodemon server/server.js",
     "dev": "nodemon server/server.js",
     "lint": "eslint --fix server test",
-    "test": "jest --watchAll --verbose"
+    "test": "jest --verbose"
   },
   "author": "gaurav",
   "license": "ISC",
