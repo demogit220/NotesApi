@@ -12,12 +12,11 @@ services:
     build:
       context: .
     environment:
-      PORT: ${PORT}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      DATABASE: ${DATABASE}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
-      JWT_COOKIE_EXPIRES_IN: ${JWT_COOKIE_EXPIRES_IN}
+      DATABASE_PASSWORD: ${{secrets.DATABASE_PASSWORD}}
+      DATABASE: ${{secrets.DATABASE}}
+      JWT_SECRET: ${{secrets.JWT_SECRET}}
+      JWT_EXPIRES_IN: ${{secrets.JWT_EXPIRES_IN}}
+      JWT_COOKIE_EXPIRES_IN: ${{secrets.JWT_COOKIE_EXPIRES_IN}}
     ports:
       - 5000:5000
 
