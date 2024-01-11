@@ -13,7 +13,7 @@ This API provides a secure and scalable way to manage notes, including creating,
 * **Text Indexing:** MongoDB text indexes
 * **Testing:** Jest
 
-## Running Locally commanda:
+## Running Basic commands:
 1. Clone the repository: 
  * `git clone https://github.com/demogit220/notesApi`
 
@@ -34,14 +34,20 @@ JWT_SECRET=<secret key for jwt token>
 JWT_EXPIRES_IN=30d
 JWT_COOKIE_EXPIRES_IN=90
 ```
+## Running On Docker(Efficient way):
+1. Compose the docker file:
+* `docker compose up`
+2. To stope and remove the container:
+* `docker compose down`
 
-5. Start the project: 
+## Running commands locally
+1. Start the project: 
 * `npm start`
 
-6. For Linting of code: 
+2. For Linting of code: 
 * `npm lint`
 
-7. To run the tests:
+3. To run the tests:
 * `npm test`
 ## Endpoints
 
